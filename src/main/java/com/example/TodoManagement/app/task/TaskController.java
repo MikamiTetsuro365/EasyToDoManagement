@@ -33,10 +33,10 @@ public class TaskController {
         taskForm.setIsNewTask(true);
         List<Task> list = taskService.findAll();
 
-        System.out.println("確認");
-        for(Task t: list){
-            System.out.println(t.getId());
-        }
+//        System.out.println("確認");
+//        for(Task t: list){
+//            System.out.println(t.getId());
+//        }
 
         //タスクの一覧表示
         //持ってきた内容を表示
