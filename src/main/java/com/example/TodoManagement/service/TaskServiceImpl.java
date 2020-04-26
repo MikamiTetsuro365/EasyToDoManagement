@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
         if(num == 0){
             System.out.println("test4: num:"+num);
             //更新されなかったら例外をthrow
-            throw new TaskNotFoundException("タスクがないにゃhanana" + num);
+            throw new TaskNotFoundException("タスクがないにゃ" + num);
         }
         System.out.println("test5: num:"+num);
     }

@@ -33,6 +33,11 @@ public class TaskController {
         taskForm.setIsNewTask(true);
         List<Task> list = taskService.findAll();
 
+        System.out.println("確認");
+        for(Task t: list){
+            System.out.println(t.getId());
+        }
+
         //タスクの一覧表示
         //持ってきた内容を表示
         model.addAttribute("list", list);
@@ -77,6 +82,7 @@ public class TaskController {
         if(result.hasErrors() == false){
             //エラーがなければタスク登録をする
             taskService.insert(task);
+            System.out.println("ンホォ");
             //リダイレクト
             //二重クリック厳禁
             //特にredirectした後に情報を飛ばさないのでRedirectAttributesはいらない

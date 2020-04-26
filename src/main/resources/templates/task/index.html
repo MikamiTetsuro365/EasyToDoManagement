@@ -64,11 +64,11 @@
     <form method="post" action="#" th:action="${taskForm.isNewTask} ? @{/index/insert} : @{/index/update}" th:object="${taskForm}">
         <div class="form-group">
             <label for="typeId">タスク種別</label>
-            <select class="custom-select" id="typeId" required>
+            <select class="custom-select" id="typeId" name="typeId" required>
                 <option selected disabled value="">選べよ...</option>
-                <option name="typeId" value="1" th:selected="*{typeId == 1}">緊急</option>
-                <option name="typeId" value="2" th:selected="*{typeId == 2}">重要</option>
-                <option name="typeId" value="3" th:selected="*{typeId == 3}">些末</option>
+                <option value="1" th:selected="*{typeId == 1}">緊急</option>
+                <option value="2" th:selected="*{typeId == 2}">重要</option>
+                <option value="3" th:selected="*{typeId == 3}">些末</option>
             </select>
         </div>
         <!--タスク名-->
@@ -100,39 +100,37 @@
     </form>
 
     <!--一覧表示　isNewTaskがTrueの時だけ-->
-    <div th:object="${taskForm}">
-        <div th:if="*{isNewTask}">
-            <table class="table table-dark">
-                <thead>
-                <tr>
-                <tr>
-                    <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
+    <div th:if="${taskForm.isNewTask}">
+        <table class="table table-dark">
+            <thead>
+            <tr>
+            <tr>
+                <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
 
-                </tr>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="t: ${list}">
-                    <td th:text="${t.id}">id</td>
-                    <td th:text="${t.taskType.type}">typeId</td>
-                    <td th:text="${t.title}">title</td>
-                    <td th:text="${t.detail}">detail</td>
-                    <td th:text="${t.deadline}">deadline</td>
-                    <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
-                    <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a></td>
-                    <!--削除ではコントローラにある機能にpostを飛ばす-->
-                    <td>
-                        <!--th:action="@{/index/delete}コントローラ呼び出し-->
-                        <form method="post" th:action="@{/index/delete}">
-                            <input type="hidden" name="taskId" th:value="${t.id}">
-                            <button type="submit" class="btn btn btn-danger">削除</button>
-                        </form>
-                    </td>
-                </tr>
+            </tr>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t: ${list}">
+                <td th:text="${t.id}">id</td>
+                <td th:text="${t.taskType.type}">typeId</td>
+                <td th:text="${t.title}">title</td>
+                <td th:text="${t.detail}">detail</td>
+                <td th:text="${t.deadline}">deadline</td>
+                <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
+                <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a></td>
+                <!--削除ではコントローラにある機能にpostを飛ばす-->
+                <td>
+                    <!--th:action="@{/index/delete}コントローラ呼び出し-->
+                    <form method="post" th:action="@{/index/delete}">
+                        <input type="hidden" name="taskId" th:value="${t.id}">
+                        <button type="submit" class="btn btn btn-danger">削除</button>
+                    </form>
+                </td>
+            </tr>
 
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 </main><!-- /.container -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

@@ -25,7 +25,7 @@ public class TaskDaoImpl implements TaskDao{
     public List<Task> findAll() {
         //task_typeの外部キーtask_typeで結合
         String s = "SELECT task.id, user_id, type_id, title, detail, deadline, " +
-                "type, comment FROM task INNER JOIN task_type ON task.id = task_type.id";
+                "type, comment FROM task INNER JOIN task_type ON task.type_id = task_type.id";
         //クエリの結果取り出し用
         List<Map<String, Object>> rlist = jdbcTemplate.queryForList(s);
         List<Task> list = new ArrayList<>();
