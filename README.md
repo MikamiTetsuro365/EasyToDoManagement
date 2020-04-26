@@ -1,2 +1,3 @@
 # EasyToDoManagement
-SpringBootの練習をしています．
+簡単なタスク管理ができます．
+
