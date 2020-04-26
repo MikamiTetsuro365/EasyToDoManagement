@@ -28,6 +28,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> findPriority() {
+        return taskDao.findPriority();
+    }
+
+    @Override
+    public List<Task> findDeadline() {
+        return taskDao.findDeadline();
+    }
+
+    @Override
     //タスク1件取得
     public Optional<Task> getTask(int id) {
         //タスクを取得してなければ例外飛ばす

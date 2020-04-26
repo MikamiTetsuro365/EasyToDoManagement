@@ -55,6 +55,72 @@ public class TaskDaoImpl implements TaskDao{
     }
 
     @Override
+    public List<Task> findPriority() {
+        //task_typeの外部キーtask_typeで結合
+        String s = "SELECT task.id, user_id, type_id, title, detail, deadline, " +
+                "type, comment FROM task INNER JOIN task_type ON task.type_id = task_type.id ORDER BY type_id ASC, deadline ASC";
+        //クエリの結果取り出し用
+        List<Map<String, Object>> rlist = jdbcTemplate.queryForList(s);
+        List<Task> list = new ArrayList<>();
+
+        for(Map<String, Object> r : rlist){
+            //ここむだ
+            Task task = new Task();
+            task.setId((int)r.get("id"));
+            task.setUserId((int)r.get("user_id"));
+            task.setTypeId((int)r.get("type_id"));
+            task.setTitle((String)r.get("title"));
+            task.setDetail((String)r.get("detail"));
+            //クエリ結果はTimestamp型
+            task.setDeadline(((Timestamp)r.get("deadline")).toLocalDateTime());
+
+            TaskType taskType = new TaskType();
+            taskType.setId((int)r.get("type_id"));
+            taskType.setType((String)r.get("type"));
+            taskType.setComment((String)r.get("comment"));
+            //Task<-TaskType
+            task.setTaskType(taskType);
+            //追加
+            list.add(task);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Task> findDeadline() {
+        //task_typeの外部キーtask_typeで結合
+        String s = "SELECT task.id, user_id, type_id, title, detail, deadline, " +
+                "type, comment FROM task INNER JOIN task_type ON task.type_id = task_type.id ORDER BY deadline ASC";
+        //クエリの結果取り出し用
+        List<Map<String, Object>> rlist = jdbcTemplate.queryForList(s);
+        List<Task> list = new ArrayList<>();
+
+        for(Map<String, Object> r : rlist){
+            //ここむだ
+            Task task = new Task();
+            task.setId((int)r.get("id"));
+            task.setUserId((int)r.get("user_id"));
+            task.setTypeId((int)r.get("type_id"));
+            task.setTitle((String)r.get("title"));
+            task.setDetail((String)r.get("detail"));
+            //クエリ結果はTimestamp型
+            task.setDeadline(((Timestamp)r.get("deadline")).toLocalDateTime());
+
+            TaskType taskType = new TaskType();
+            taskType.setId((int)r.get("type_id"));
+            taskType.setType((String)r.get("type"));
+            taskType.setComment((String)r.get("comment"));
+            //Task<-TaskType
+            task.setTaskType(taskType);
+            //追加
+            list.add(task);
+        }
+
+        return list;
+    }
+
+    @Override
     //タスクを1件だけ取得する
     public Optional<Task> findById(int id) {
         String s = "SELECT task.id, user_id, type_id, title, detail, deadline, " +
@@ -84,6 +150,8 @@ public class TaskDaoImpl implements TaskDao{
 
         return oTask;
     }
+
+
 
     @Override
     //タスクの追加

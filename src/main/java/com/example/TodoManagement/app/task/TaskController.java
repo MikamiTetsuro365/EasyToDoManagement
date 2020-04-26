@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,10 @@ public class TaskController {
     public String showTask(TaskForm taskForm, Model model){
 
         //タスクの新規登録->新規登録画面を表示
+        //System.out.println(taskForm.getOrder()); -> 初期値は0(登録順)
         taskForm.setIsNewTask(true);
+        System.out.println(taskForm.getOrder());
+
         List<Task> list = taskService.findAll();
 
 //        System.out.println("確認");
@@ -41,6 +45,7 @@ public class TaskController {
         //タスクの一覧表示
         //持ってきた内容を表示
         model.addAttribute("list", list);
+        model.addAttribute("complete", "登録順で並んでいます");
         model.addAttribute("title","タスク一覧");
 
         return "task/index";
@@ -82,7 +87,7 @@ public class TaskController {
         if(result.hasErrors() == false){
             //エラーがなければタスク登録をする
             taskService.insert(task);
-            System.out.println("ンホォ");
+            //System.out.println("ンホォ");
             //リダイレクト
             //二重クリック厳禁
             //特にredirectした後に情報を飛ばさないのでRedirectAttributesはいらない
@@ -99,6 +104,30 @@ public class TaskController {
 
             return "task/index";
         }
+    }
+
+    @GetMapping("/priority")
+    public String registerOrder(TaskForm taskForm, Model model){
+        taskForm.setIsNewTask(true);
+        //フォームの内容は白紙に戻さずに現状維持
+        List<Task> list = taskService.findPriority();
+        model.addAttribute("taskForm", taskForm);
+        model.addAttribute("complete", "優先度順で並んでいます");
+        model.addAttribute("list", list);
+        model.addAttribute("title","タスク一覧");
+        return "task/index";
+    }
+
+    @GetMapping("/deadline")
+    public String deadlineOrder(TaskForm taskForm, Model model){
+        taskForm.setIsNewTask(true);
+        //フォームの内容は白紙に戻さずに現状維持
+        List<Task> list = taskService.findDeadline();
+        model.addAttribute("taskForm", taskForm);
+        model.addAttribute("complete", "期限順で並んでいます");
+        model.addAttribute("list", list);
+        model.addAttribute("title","タスク一覧");
+        return "task/index";
     }
 
     //更新

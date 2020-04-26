@@ -68,7 +68,7 @@
                 <option selected disabled value="">選べよ...</option>
                 <option value="1" th:selected="*{typeId == 1}">緊急</option>
                 <option value="2" th:selected="*{typeId == 2}">重要</option>
-                <option value="3" th:selected="*{typeId == 3}">些末</option>
+                <option value="3" th:selected="*{typeId == 3}">どうでもいい</option>
             </select>
         </div>
         <!--タスク名-->
@@ -101,6 +101,15 @@
 
     <!--一覧表示　isNewTaskがTrueの時だけ-->
     <div th:if="${taskForm.isNewTask}">
+        <!--completeが空だったら表示しない-->
+        <div th:unless="${#strings.isEmpty(complete)}">
+            <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${complete}"　role="alert"></div>
+        </div>
+        <div class="float-right pb-1">
+            <a type="button" th:href="@{/index}" class="btn btn-primary btn-lg">登録順</a>
+            <a type="button" th:href="@{/index/priority}" class="btn btn-primary btn-lg">優先度順</a>
+            <a type="button" th:href="@{/index/deadline}" class="btn btn-primary btn-lg">期限順</a>
+        </div>
         <table class="table table-dark">
             <thead>
             <tr>
@@ -128,7 +137,6 @@
                     </form>
                 </td>
             </tr>
-
             </tbody>
         </table>
     </div>

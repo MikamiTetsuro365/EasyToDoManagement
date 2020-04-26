@@ -30,18 +30,22 @@ public class TaskForm {
     @Future(message = "期限が過去に設定されてるぞ")
     private LocalDateTime deadline;
 
-    //データの検索か追加，更新の判断
-    public boolean isNewTask;
+    //タスクの検索か追加，更新の判断
+    private boolean isNewTask;
+    //タスクの並び
+    private int order;
+
 
     //コンストラクタ
     public TaskForm(){}
 
-    public TaskForm(int typeId, String title, String detail, LocalDateTime deadline, boolean isNewTask) {
+    public TaskForm(int typeId, String title, String detail, LocalDateTime deadline, boolean isNewTask, int order) {
         this.typeId = typeId;
         this.title = title;
         this.detail = detail;
         this.deadline = deadline;
         this.isNewTask = isNewTask;
+        this.order = order;
     }
 
     //ゲッター
@@ -65,6 +69,8 @@ public class TaskForm {
         return isNewTask;
     }
 
+    public int getOrder(){return order; };
+
     //セッター
     public void setTypeId(int typeId) {
         this.typeId = typeId;
@@ -85,4 +91,6 @@ public class TaskForm {
     public void setIsNewTask(boolean newTask) {
         isNewTask = newTask;
     }
+
+    public void setOrder(int order){this.order = order; }
 }
