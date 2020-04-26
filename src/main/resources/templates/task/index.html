@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>Starter Template · Bootstrap</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/starter-template/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/docs/4.4/dist/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/4.4/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/4.4/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/4.4/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon.ico">
+    <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#563d7c">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" th:href="@{/css/starter-template.css}" rel="stylesheet">
+    <!-- dataPicker:https://tempusdominus.github.io/bootstrap-4/Installing/-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+
+</head>
+<body>
+
+<!--共通ヘッダー-->
+<div th:replace="~{block/header::headerA}"></div>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1 th:text="${title}">title</h1>
+    </div>
+    <!--isNewTaskがtrueの時はinsertへ，falseのときはupdate機能へリダイレクト-->
+    <!--よく忘れるあれ　? 真 : 偽-->
+    <form method="post" action="#" th:action="${taskForm.isNewTask} ? @{/index/insert} : @{/index/update}" th:object="${taskForm}">
+        <div class="form-group">
+            <label for="typeId">タスク種別</label>
+            <select class="custom-select" id="typeId" required>
+                <option selected disabled value="">選べよ...</option>
+                <option name="typeId" value="1" th:selected="*{typeId == 1}">緊急</option>
+                <option name="typeId" value="2" th:selected="*{typeId == 2}">重要</option>
+                <option name="typeId" value="3" th:selected="*{typeId == 3}">些末</option>
+            </select>
+        </div>
+        <!--タスク名-->
+        <div class="form-group">
+            <label for="title">タスク名</label>
+            <textarea id="title" class="form-control" name="title" cols="30" th:field="*{title}" rows="1"></textarea>
+        </div>
+        <!--エラー表示-->
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        <!--タスク内容-->
+        <div class="form-group">
+            <label for="detail">タスク内容</label>
+            <textarea id="detail" class="form-control" name="detail" cols="40" th:field="*{detail}" rows="1"></textarea>
+        </div>
+        <!--エラー表示-->
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+        <!--日付選択-->
+        <div class="form-group">
+            <input type="datetime-local" name="deadline" th:value="*{deadline}">
+        </div>
+        <!--エラー表示-->
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></div>
+        <!--更新と削除で使うID，IDは自動で付与されるので隠しておく, valueにはその時取得したtaskIdを，th:ifが0の時だけ下のフォームは有効-->
+        <div class="form-group" th:if="${taskId}" >
+            <input type="hidden" name="taskId" th:value="${taskId}">
+        </div>
+        <!--送信ボタン-->
+        <button type="submit" class="btn btn-primary">登録</button>
+    </form>
+
+    <!--一覧表示　isNewTaskがTrueの時だけ-->
+    <div th:object="${taskForm}">
+        <div th:if="*{isNewTask}">
+            <table class="table table-dark">
+                <thead>
+                <tr>
+                <tr>
+                    <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
+
+                </tr>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t: ${list}">
+                    <td th:text="${t.id}">id</td>
+                    <td th:text="${t.taskType.type}">typeId</td>
+                    <td th:text="${t.title}">title</td>
+                    <td th:text="${t.detail}">detail</td>
+                    <td th:text="${t.deadline}">deadline</td>
+                    <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
+                    <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a></td>
+                    <!--削除ではコントローラにある機能にpostを飛ばす-->
+                    <td>
+                        <!--th:action="@{/index/delete}コントローラ呼び出し-->
+                        <form method="post" th:action="@{/index/delete}">
+                            <input type="hidden" name="taskId" th:value="${t.id}">
+                            <button type="submit" class="btn btn btn-danger">削除</button>
+                        </form>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main><!-- /.container -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.4/dist/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script></body>
+</html>
