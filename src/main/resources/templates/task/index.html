@@ -91,7 +91,7 @@
         </div>
         <!--エラー表示-->
         <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></div>
-        <!--更新と削除で使うID，IDは自動で付与されるので隠しておく, valueにはその時取得したtaskIdを，th:ifが0の時だけ下のフォームは有効-->
+        <!--更新と削除で使うID，InsertならIDは自動で付与されるので隠しておく, valueにはその時取得したtaskIdを，th:ifが0の時だけ下のフォームは有効-->
         <div class="form-group" th:if="${taskId}" >
             <input type="hidden" name="taskId" th:value="${taskId}">
         </div>
