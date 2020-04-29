@@ -27,9 +27,10 @@ public class WEBMvcControllerAdvice {
 //        return "error/CustamPage";
 //    }
 //
-    //全てのコントローラ対象のエラー処理
+    //全てのコントローラ対象のエラー処理->例外を受け取ったらエラーページへ
     @ExceptionHandler(TaskNotFoundException.class)
     public String handleException(TaskNotFoundException e, Model model){
+        //期限切れのタスクを見つけたらどうするか問いかける
         model.addAttribute("message", e);
         return "error/errorPage";
     }

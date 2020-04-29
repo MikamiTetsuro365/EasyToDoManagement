@@ -3,18 +3,26 @@ package com.example.TodoManagement.app.task;
 
 import com.example.TodoManagement.entity.Task;
 import com.example.TodoManagement.service.TaskService;
-import com.example.TodoManagement.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/index")
@@ -27,6 +35,30 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    //現在時刻から１分後が期日のデータを差し込む
+    @GetMapping("/afteroneminute")
+    public String aftrtone(TaskForm taskForm, Model model){
+
+        Task task = new Task();
+        //taskIdは自動で割り振られるのでスルー
+        //UserIdは今は1で固定
+        task.setUserId(1);
+        task.setTypeId(1);
+        //ランダムな文字列の生成
+        UUID uuid = UUID.randomUUID();
+        String str = uuid.toString();
+        task.setTitle(str);
+        task.setDetail(str);
+        //時間(ミリビョウは切り捨て)
+        LocalDateTime localDateTime = LocalDateTime.now();
+        localDateTime = localDateTime.plusMinutes(1);
+        task.setDeadline(localDateTime.truncatedTo(ChronoUnit.MINUTES));
+        //適当なの登録
+        taskService.insert(task);
+
+        return "redirect:/index";
+    }
+
     @GetMapping
     public String showTask(TaskForm taskForm, Model model){
 
@@ -35,19 +67,13 @@ public class TaskController {
         taskForm.setIsNewTask(true);
         System.out.println(taskForm.getOrder());
 
-        List<Task> list = taskService.findAll();
-
-//        System.out.println("確認");
-//        for(Task t: list){
-//            System.out.println(t.getId());
-//        }
-
         //タスクの一覧表示
-        //持ってきた内容を表示
+        List<Task> list = taskService.findAll();
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
         model.addAttribute("list", list);
+        model.addAttribute("overdueList", overdueList);
         model.addAttribute("complete", "登録順で並んでいます");
         model.addAttribute("title","タスク一覧");
-
         return "task/index";
     }
 
@@ -140,7 +166,7 @@ public class TaskController {
 
         if(result.hasErrors() == false){
             //更新
-            System.out.println("test2: taskID:"+taskId);
+            //System.out.println("test2: taskID:"+taskId);
             taskService.update(task);
             //一度だけメッセージを残す
             redirectAttributes.addFlashAttribute("complete", "タスク変更したぞ");

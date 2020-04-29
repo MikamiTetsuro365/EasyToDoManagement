@@ -101,17 +101,18 @@
 
     <!--一覧表示　isNewTaskがTrueの時だけ-->
     <div th:if="${taskForm.isNewTask}">
-        <!--completeが空だったら表示しない-->
+        <!--何順で並んでいるか表示するところ，completeが空だったら表示しない-->
         <div th:unless="${#strings.isEmpty(complete)}">
             <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${complete}"　role="alert"></div>
         </div>
         <div class="float-right pb-1">
+            <a type="button" th:href="@{/index}" class="btn btn-info btn-lg">更新</a>
             <a type="button" th:href="@{/index}" class="btn btn-primary btn-lg">登録順</a>
             <a type="button" th:href="@{/index/priority}" class="btn btn-primary btn-lg">優先度順</a>
             <a type="button" th:href="@{/index/deadline}" class="btn btn-primary btn-lg">期限順</a>
         </div>
-        <table class="table table-dark">
-            <thead>
+        <table class="table">
+            <thead class="thead-dark">
             <tr>
             <tr>
                 <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
@@ -139,6 +140,42 @@
             </tr>
             </tbody>
         </table>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+            <tr>
+                <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
+
+            </tr>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t: ${overdueList}">
+                <td th:text="${t.id}">id</td>
+                <td th:text="${t.taskType.type}">typeId</td>
+                <td th:text="${t.title}">title</td>
+                <td th:text="${t.detail}">detail</td>
+                <td th:text="${t.deadline}">deadline</td>
+                <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
+                <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">延長</a></td>
+                <!--削除ではコントローラにある機能にpostを飛ばす-->
+                <td>
+                    <!--th:action="@{/index/delete}コントローラ呼び出し-->
+                    <form method="post" th:action="@{/index/delete}">
+                        <input type="hidden" name="taskId" th:value="${t.id}">
+                        <button type="submit" class="btn btn btn-danger">削除</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!--動作確認のボタン-->
+        <div class="float-right pb-1">
+            <!--現在時刻から1分後が期日のデータをデータベースに差し込む-->
+            <a type="button" th:href="@{/index/afteroneminute}" class="btn btn-primary btn-lg">1分後タスク</a>
+        </div>
     </div>
 </main><!-- /.container -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

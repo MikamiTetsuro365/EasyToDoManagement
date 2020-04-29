@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,21 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findDeadline() {
         return taskDao.findDeadline();
+    }
+
+    @Override
+    public List<Task> overdueTaskFind(LocalDateTime localDateTime) {
+        return taskDao.overdueTaskFind(localDateTime);
+    }
+
+    @Override
+    public List<Task> ovrtdueTaskFindAll() {
+        return taskDao.overdueTaskFindAll();
+    }
+
+    @Override
+    public void overdueTaskInsert(Task task) {
+        taskDao.overdueTaskInsert(task);
     }
 
     @Override
