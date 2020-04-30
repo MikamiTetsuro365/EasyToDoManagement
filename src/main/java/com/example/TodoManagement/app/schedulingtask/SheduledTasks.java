@@ -22,7 +22,8 @@ public class SheduledTasks {
         this.taskService = taskService;
     }
 
-    @Scheduled(fixedRate = 5000)
+    //期限切れタスクの検索
+    @Scheduled(fixedRate = 15000)
     public void checkDeadline(){
         //System.out.println("test");
         //期限切れのタスクを探す

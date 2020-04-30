@@ -46,7 +46,7 @@ public class TaskController {
         task.setTypeId(1);
         //ランダムな文字列の生成
         UUID uuid = UUID.randomUUID();
-        String str = uuid.toString();
+        String str = uuid.toString().substring(10);
         task.setTitle(str);
         task.setDetail(str);
         //時間(ミリビョウは切り捨て)
@@ -60,20 +60,24 @@ public class TaskController {
     }
 
     @GetMapping
-    public String showTask(TaskForm taskForm, Model model){
-
-        //タスクの新規登録->新規登録画面を表示
-        //System.out.println(taskForm.getOrder()); -> 初期値は0(登録順)
+    public String main(TaskForm taskForm, Model model){
+        //一覧を表示させる->true
         taskForm.setIsNewTask(true);
-        System.out.println(taskForm.getOrder());
-
-        //タスクの一覧表示
         List<Task> list = taskService.findAll();
-        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
         model.addAttribute("list", list);
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
         model.addAttribute("overdueList", overdueList);
-        model.addAttribute("complete", "登録順で並んでいます");
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
+        //現在画面のタイトル
         model.addAttribute("title","タスク一覧");
+        model.addAttribute("complete", "登録順で並んでいます");
+        //フォームの入力が残ってたら残す
+        model.addAttribute("taskForm", taskForm);
         return "task/index";
     }
 
@@ -97,6 +101,7 @@ public class TaskController {
         //表示
         List<Task> list = taskService.findAll();
         model.addAttribute("list", list);
+
         model.addAttribute("title","タスク一覧");
         //紐付け用
         model.addAttribute("taskId",id);
@@ -126,6 +131,14 @@ public class TaskController {
             //表示
             List<Task> list = taskService.findAll();
             model.addAttribute("list", list);
+            //期限切れタスク
+            List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+            model.addAttribute("overdueList", overdueList);
+            if(overdueList.isEmpty()){
+                model.addAttribute("overdue","期限切れタスクがはありません");
+            }else{
+                model.addAttribute("overdue","期限切れタスクがあります");
+            }
             model.addAttribute("title","タスク一覧");
 
             return "task/index";
@@ -140,6 +153,14 @@ public class TaskController {
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("complete", "優先度順で並んでいます");
         model.addAttribute("list", list);
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+        model.addAttribute("overdueList", overdueList);
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
         model.addAttribute("title","タスク一覧");
         return "task/index";
     }
@@ -152,6 +173,14 @@ public class TaskController {
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("complete", "期限順で並んでいます");
         model.addAttribute("list", list);
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+        model.addAttribute("overdueList", overdueList);
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
         model.addAttribute("title","タスク一覧");
         return "task/index";
     }
@@ -176,6 +205,16 @@ public class TaskController {
         }else{
             //失敗したら画面にとどまる
             model.addAttribute("taskForm", taskForm);
+            //明示的にtaskIdは引き渡しておく
+            model.addAttribute("taskId", taskId);
+            //期限切れタスク
+            List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+            model.addAttribute("overdueList", overdueList);
+            if(overdueList.isEmpty()){
+                model.addAttribute("overdue","期限切れタスクはありません");
+            }else{
+                model.addAttribute("overdue","期限切れタスクがあります");
+            }
             model.addAttribute("title","タスク一覧");
             return "task/index";
         }
