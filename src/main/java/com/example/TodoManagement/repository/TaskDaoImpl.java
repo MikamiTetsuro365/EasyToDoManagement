@@ -115,7 +115,6 @@ public class TaskDaoImpl implements TaskDao{
         jdbcTemplate.update(s, task.getUserId(), task.getTypeId(), task.getTitle(), task.getDetail(), task.getDeadline());
     }
 
-
     @Override
     //タスクの追加
     public void insert(Task task) {

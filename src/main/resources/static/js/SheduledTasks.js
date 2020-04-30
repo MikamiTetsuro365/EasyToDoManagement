@@ -12,7 +12,9 @@ $(function(){
     });
 
     $('#registerModal').on('hidden.bs.modal', function () {
-        StartTimer();
+        //StartTimer();
+        //ここらAjaxでどうにかして方がええんやろうなぁ
+        window.location.href = '/index';
     })
 });
 

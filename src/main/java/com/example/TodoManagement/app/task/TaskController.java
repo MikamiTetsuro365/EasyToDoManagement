@@ -19,10 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.Date;
+import java.util.*;
 
 @Controller
 @RequestMapping("/index")
@@ -34,6 +31,9 @@ public class TaskController {
     public TaskController(TaskService taskService){
         this.taskService = taskService;
     }
+
+    //タスクの並び
+    private int order;
 
     //現在時刻から１分後が期日のデータを差し込む
     @GetMapping("/afteroneminute")
@@ -61,10 +61,24 @@ public class TaskController {
 
     @GetMapping
     public String main(TaskForm taskForm, Model model){
-        //一覧を表示させる->true
+        //順番更新
         taskForm.setIsNewTask(true);
         taskForm.setIsReInput(true);
-        List<Task> list = taskService.findAll();
+
+        List<Task> list = new ArrayList<>();
+        if(order == 0){
+            model.addAttribute("complete", "登録順で並んでいます");
+            list = taskService.findAll();
+        }else if(order == 1){
+            model.addAttribute("complete", "優先度順で並んでいます");
+            list = taskService.findPriority();
+        }else{
+            model.addAttribute("complete", "期限順で並んでいます");
+            list = taskService.findDeadline();
+        }
+
+        //フォームの内容は白紙に戻さずに現状維持
+        model.addAttribute("taskForm", taskForm);
         model.addAttribute("list", list);
         //期限切れタスク
         List<Task> overdueList = taskService.ovrtdueTaskFindAll();
@@ -74,11 +88,7 @@ public class TaskController {
         }else{
             model.addAttribute("overdue","期限切れタスクがあります");
         }
-        //現在画面のタイトル
         model.addAttribute("title","タスク一覧");
-        model.addAttribute("complete", "登録順で並んでいます");
-        //フォームの入力が残ってたら残す
-        model.addAttribute("taskForm", taskForm);
         return "task/index";
     }
 
@@ -147,8 +157,34 @@ public class TaskController {
         }
     }
 
-    @GetMapping("/priority")
+    //登録順
+    @GetMapping("/register")
     public String registerOrder(TaskForm taskForm, Model model){
+        //順番更新
+        order = 0;
+        taskForm.setIsNewTask(true);
+        taskForm.setIsReInput(true);
+        //フォームの内容は白紙に戻さずに現状維持
+        List<Task> list = taskService.findAll();
+        model.addAttribute("taskForm", taskForm);
+        model.addAttribute("complete", "登録順で並んでいます");
+        model.addAttribute("list", list);
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+        model.addAttribute("overdueList", overdueList);
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
+        model.addAttribute("title","タスク一覧");
+        return "task/index";
+    }
+
+    @GetMapping("/priority")
+    public String priorityOrder(TaskForm taskForm, Model model){
+        //順番更新
+        order = 1;
         taskForm.setIsNewTask(true);
         taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
@@ -170,6 +206,8 @@ public class TaskController {
 
     @GetMapping("/deadline")
     public String deadlineOrder(TaskForm taskForm, Model model){
+        //期限
+        order = 2;
         taskForm.setIsNewTask(true);
         taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
@@ -261,6 +299,7 @@ public class TaskController {
         taskForm.setIsNewTask(false);
         return taskForm;
     }
+
 
 
 }
