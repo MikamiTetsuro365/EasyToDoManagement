@@ -63,6 +63,7 @@ public class TaskController {
     public String main(TaskForm taskForm, Model model){
         //一覧を表示させる->true
         taskForm.setIsNewTask(true);
+        taskForm.setIsReInput(true);
         List<Task> list = taskService.findAll();
         model.addAttribute("list", list);
         //期限切れタスク
@@ -126,6 +127,7 @@ public class TaskController {
         }else{
             //もう一度新規登録ページへ
             taskForm.setIsNewTask(true);
+            taskForm.setIsReInput(false);
             //フォームの内容は白紙に戻さずに現状維持
             model.addAttribute("taskForm", taskForm);
             //表示
@@ -148,6 +150,7 @@ public class TaskController {
     @GetMapping("/priority")
     public String registerOrder(TaskForm taskForm, Model model){
         taskForm.setIsNewTask(true);
+        taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
         List<Task> list = taskService.findPriority();
         model.addAttribute("taskForm", taskForm);
@@ -168,6 +171,7 @@ public class TaskController {
     @GetMapping("/deadline")
     public String deadlineOrder(TaskForm taskForm, Model model){
         taskForm.setIsNewTask(true);
+        taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
         List<Task> list = taskService.findDeadline();
         model.addAttribute("taskForm", taskForm);
@@ -204,6 +208,7 @@ public class TaskController {
             return "redirect:/index";
         }else{
             //失敗したら画面にとどまる
+            taskForm.setIsReInput(false);
             model.addAttribute("taskForm", taskForm);
             //明示的にtaskIdは引き渡しておく
             model.addAttribute("taskId", taskId);

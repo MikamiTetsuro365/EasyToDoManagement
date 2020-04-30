@@ -32,6 +32,8 @@ public class TaskForm {
 
     //タスクの検索か追加，更新の判断
     private boolean isNewTask;
+    //タスクの再入力をさせる場合
+    private boolean isReInput;
     //タスクの並び
     private int order;
 
@@ -39,13 +41,14 @@ public class TaskForm {
     //コンストラクタ
     public TaskForm(){}
 
-    public TaskForm(int typeId, String title, String detail, LocalDateTime deadline, boolean isNewTask, int order) {
+    public TaskForm(int typeId, String title, String detail, LocalDateTime deadline, boolean isNewTask, int order, boolean isReInput) {
         this.typeId = typeId;
         this.title = title;
         this.detail = detail;
         this.deadline = deadline;
         this.isNewTask = isNewTask;
         this.order = order;
+        this.isReInput = isReInput;
     }
 
     //ゲッター
@@ -71,6 +74,10 @@ public class TaskForm {
 
     public int getOrder(){return order; };
 
+    public boolean getIsReInput() {
+        return isReInput;
+    }
+
     //セッター
     public void setTypeId(int typeId) {
         this.typeId = typeId;
@@ -93,4 +100,9 @@ public class TaskForm {
     }
 
     public void setOrder(int order){this.order = order; }
+
+    public void setIsReInput(boolean reInput) {
+        this.isReInput = reInput;
+    }
+
 }
