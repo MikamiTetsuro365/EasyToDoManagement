@@ -166,121 +166,8 @@
         <a type="button" th:href="@{/index/deadline}" class="btn btn-primary btn-lg">期限順</a>
     </div>
 
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-        <tr>
-            <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
-
-        </tr>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="t: ${list}">
-            <td th:text="${t.id}">id</td>
-            <td th:text="${t.taskType.type}">typeId</td>
-            <td th:text="${t.title}">title</td>
-            <td th:text="${t.detail}">detail</td>
-            <td th:text="${t.deadline}">deadline</td>
-            <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
-            <td>
-                <a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a>
-                <!--th:attrで対応外の属性値に変数を埋め込んだりできるぞ-->
-<!--                    <button type="button" onclick="StopTimer();" class="btn btn-primary" data-toggle="modal" th:attr="data-target='#editModal'+${t.id}">編集</button>-->
-                <!-- Modal -->
-<!--                    <div class="modal fade" th:id="'editModal'+${t.id}" tabindex="-1" role="dialog" aria-labelledby="editModalCenterTitle" aria-hidden="true">-->
-<!--                        <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--                            <div class="modal-content">-->
-<!--                                <div class="modal-header">-->
-<!--                                    <h5 class="modal-title" id="editModalLongTitle">タスク番号<span th:text="${t.id}">タスク番号</span>を編集</h5>-->
-<!--                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                                        <span aria-hidden="true">&times;</span>-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                                <div class="modal-body">-->
-<!--                                    <form method="post" action="#" th:action="@{/index/update}" th:object="${taskForm}">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="typeId">タスク種別</label>-->
-<!--                                            <select class="custom-select" name="typeId" required>-->
-<!--                                                <option selected disabled value="">選べよ...</option>-->
-<!--                                                <option value="1" th:selected="${t.taskType.id == 1}">緊急</option>-->
-<!--                                                <option value="2" th:selected="${t.taskType.id == 2}">重要</option>-->
-<!--                                                <option value="3" th:selected="${t.taskType.id == 3}">どうでもいい</option>-->
-<!--                                            </select>-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash;タスク名&ndash;&gt;-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="title">タスク名</label>-->
-<!--                                            <textarea class="form-control" name="title" cols="30" th:field="*{title}" rows="1"></textarea>-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash;タスク内容&ndash;&gt;-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="detail">タスク内容</label>-->
-<!--                                            <textarea class="form-control" name="detail" cols="40" th:field="*{detail}" rows="1"></textarea>-->
-<!--                                        </div>-->
-
-<!--                                        &lt;!&ndash;日付選択&ndash;&gt;-->
-<!--                                        <div class="form-group">-->
-<!--                                            <input type="datetime-local" name="deadline" th:value="*{deadline}">-->
-<!--                                        </div>-->
-
-<!--                                        &lt;!&ndash;更新と削除で使うID，InsertならIDは自動で付与されるので隠しておく, valueにはその時取得したtaskIdを，th:ifが0の時だけ下のフォームは有効&ndash;&gt;-->
-<!--                                        <input type="hidden" name="taskId" th:value="${taskId}">-->
-<!--                                        &lt;!&ndash;送信ボタン&ndash;&gt;-->
-<!--                                        <div class="modal-footer">-->
-<!--                                            <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">閉じる</button>-->
-<!--                                            <button type="submit" class="btn btn-primary closeModel">登録</button>-->
-<!--                                        </div>-->
-<!--                                    </form>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-            </td>
-            <!--削除ではコントローラにある機能にpostを飛ばす-->
-            <td>
-                <!--th:action="@{/index/delete}コントローラ呼び出し-->
-                <form method="post" th:action="@{/index/delete}">
-                    <input type="hidden" name="taskId" th:value="${t.id}">
-                    <button type="submit" class="btn btn btn-danger">削除</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <!--期限ぎれタスクの表示-->
-    <div th:unless="${#strings.isEmpty(overdue)}">
-        <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${overdue}"　role="alert"></div>
-    </div>
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-        <tr>
-            <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
-
-        </tr>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="t: ${overdueList}">
-            <td th:text="${t.id}">id</td>
-            <td th:text="${t.taskType.type}">typeId</td>
-            <td th:text="${t.title}">title</td>
-            <td th:text="${t.detail}">detail</td>
-            <td th:text="${t.deadline}">deadline</td>
-            <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
-            <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">延長</a></td>
-            <!--削除ではコントローラにある機能にpostを飛ばす-->
-            <td>
-                <!--th:action="@{/index/delete}コントローラ呼び出し-->
-                <form method="post" th:action="@{/index/delete}">
-                    <input type="hidden" name="taskId" th:value="${t.id}">
-                    <button type="submit" class="btn btn btn-danger">削除</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <!--タスクリスト-->
+    <div  th:replace="~{block/tasklist::tasklist}"></div>
 
     <!--動作確認のボタン-->
     <div class="float-right pb-1">
@@ -288,7 +175,7 @@
         <a type="button" th:href="@{/index/afteroneminute}" class="btn btn-primary btn-lg">1分後タスク</a>
     </div>
 </main><!-- /.container -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
 <script src="/docs/4.4/dist/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
 <script type="text/javascript" th:src="@{/js/SheduledTasks.js}"></script>
