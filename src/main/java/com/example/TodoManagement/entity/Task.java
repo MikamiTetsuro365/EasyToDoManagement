@@ -4,15 +4,18 @@ import java.time.LocalDateTime;
 
 public class Task {
 
+    //データベース上
     private int id;
     private  int userId;
     private int typeId;
-
     private TaskType taskType;
-
     private String title;
     private String detail;
     private LocalDateTime deadline;
+    //残り時間
+    private String remainTime;
+
+    //セッターゲッター
 
     public void setId(int id) {
         this.id = id;
@@ -42,6 +45,10 @@ public class Task {
         this.deadline = deadline;
     }
 
+    public void setRemainTime(String remainTime) {
+        this.remainTime = remainTime;
+    }
+
     public int getId() {
         return id;
     }
@@ -69,4 +76,9 @@ public class Task {
     public LocalDateTime getDeadline() {
         return deadline;
     }
+
+    public String getRemainTime() {
+        return remainTime;
+    }
+
 }

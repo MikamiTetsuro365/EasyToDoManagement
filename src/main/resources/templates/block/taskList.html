@@ -17,7 +17,7 @@
             <td th:text="${t.taskType.type}">typeId</td>
             <td th:text="${t.title}">title</td>
             <td th:text="${t.detail}">detail</td>
-            <td ><div th:id="${t.id}"></div></td>
+            <td ><div th:id="${t.id}" th:text="${t.remainTime}"></div></td>
             <div >
                 <script th:inline="javascript">
                     function countDown(){

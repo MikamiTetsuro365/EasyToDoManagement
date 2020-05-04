@@ -79,6 +79,10 @@ public class TaskController {
             list = taskService.findDeadline();
         }
 
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
+
         //フォームの内容は白紙に戻さずに現状維持
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("list", list);
@@ -114,6 +118,10 @@ public class TaskController {
             list = taskService.findDeadline();
         }
 
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
+
         //フォームの内容は白紙に戻さずに現状維持
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("list", list);
@@ -142,6 +150,9 @@ public class TaskController {
         model.addAttribute("taskForm", taskForm);
         //表示
         List<Task> list = taskService.findAll();
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
         model.addAttribute("list", list);
         //期限切れタスク
         List<Task> overdueList = taskService.ovrtdueTaskFindAll();
@@ -186,6 +197,9 @@ public class TaskController {
 
         //表示
         List<Task> list = taskService.findAll();
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
         model.addAttribute("list", list);
         //期限切れタスク
         List<Task> overdueList = taskService.ovrtdueTaskFindAll();
@@ -232,6 +246,9 @@ public class TaskController {
             model.addAttribute("taskForm", taskForm);
             //表示
             List<Task> list = taskService.findAll();
+            for(int i = 0; i < list.size(); i++){
+                list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+            }
             model.addAttribute("list", list);
             //期限切れタスク
             List<Task> overdueList = taskService.ovrtdueTaskFindAll();
@@ -256,6 +273,9 @@ public class TaskController {
         taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
         List<Task> list = taskService.findAll();
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("complete", "登録順で並んでいます");
         model.addAttribute("list", list);
@@ -280,6 +300,9 @@ public class TaskController {
         taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
         List<Task> list = taskService.findPriority();
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("complete", "優先度順で並んでいます");
         model.addAttribute("list", list);
@@ -303,6 +326,9 @@ public class TaskController {
         taskForm.setIsReInput(true);
         //フォームの内容は白紙に戻さずに現状維持
         List<Task> list = taskService.findDeadline();
+        for(int i = 0; i < list.size(); i++){
+            list.get(i).setRemainTime(remainTime(list.get(i).getDeadline()));
+        }
         model.addAttribute("taskForm", taskForm);
         model.addAttribute("complete", "期限順で並んでいます");
         model.addAttribute("list", list);
@@ -402,6 +428,17 @@ public class TaskController {
         return taskForm;
     }
 
+    private String remainTime(LocalDateTime deadline){
+        String time;
+        LocalDateTime now = LocalDateTime.now();
+        long day = ChronoUnit.DAYS.between(now, deadline);
+        long hour = ChronoUnit.HOURS.between(now, deadline) - day * 24;
+        long minute = ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60;
+        long sec = ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60;
 
+        time = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
+        System.out.println(time);
 
+        return time;
+    }
 }
