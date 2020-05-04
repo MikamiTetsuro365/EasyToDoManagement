@@ -65,6 +65,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Optional<Task> getOverdueTask(int id) {
+        //タスク取得してなければ例外を飛ばす
+        try{
+            return taskDao.overdueFindById(id);
+        }catch (EmptyResultDataAccessException e){
+            throw new TaskNotFoundException("タスクがないにゃ");
+        }
+    }
+
+    @Override
     //タスク追加
     public void insert(Task task) {
         taskDao.insert(task);
@@ -93,4 +103,15 @@ public class TaskServiceImpl implements TaskService {
             throw new TaskNotFoundException("タスクがないにゃ");
         }
     }
+
+    //期限切れタスクの削除
+    @Override
+    public void overdueDeleteById(int id) {
+        //更新
+        if(taskDao.overdueDeleteById(id) == 0){
+            //更新されなかったら例外をthrow
+            throw new TaskNotFoundException("タスクがないにゃ");
+        }
+    }
+
 }

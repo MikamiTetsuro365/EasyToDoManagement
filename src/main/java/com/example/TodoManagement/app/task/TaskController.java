@@ -1,6 +1,7 @@
 package com.example.TodoManagement.app.task;
 
 
+import ch.qos.logback.classic.pattern.DateConverter;
 import com.example.TodoManagement.entity.Task;
 import com.example.TodoManagement.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,41 @@ public class TaskController {
         return "block/tasklist::tasklist";
     }
 
+    //期限切れのタスクの更新
+    @GetMapping("/overdue{overdueId}")
+    public String overdueUpdate(TaskForm taskForm, @PathVariable int overdueId, Model model){
+        Optional<Task> otask = taskService.getOverdueTask(overdueId);
+        Optional<TaskForm> oTaskForm = otask.map(t->outputTaskForm(t));
+        if(oTaskForm.isPresent()){
+            taskForm = oTaskForm.get();
+        }
+
+        model.addAttribute("taskForm", taskForm);
+        //表示
+        List<Task> list = taskService.findAll();
+        model.addAttribute("list", list);
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+        model.addAttribute("overdueList", overdueList);
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
+        //何順？
+        if(order == 0){
+            model.addAttribute("complete", "登録順で並んでいます");
+        }else if(order == 1){
+            model.addAttribute("complete", "優先度順で並んでいます");
+        }else{
+            model.addAttribute("complete", "期限順で並んでいます");
+        }
+        model.addAttribute("title","タスク一覧");
+        //紐付け用
+        model.addAttribute("taskId",overdueId);
+        return "task/index";
+    }
+
     //編集対象のデータを１件だけ取得してフォームに出力
     @GetMapping("/{id}")
     public String updateShow(TaskForm taskForm, @PathVariable int id, Model model){
@@ -146,10 +182,27 @@ public class TaskController {
 
         //出力
         model.addAttribute("taskForm", taskForm);
+        //System.out.println(taskForm.getDeadline());
+
         //表示
         List<Task> list = taskService.findAll();
         model.addAttribute("list", list);
-
+        //期限切れタスク
+        List<Task> overdueList = taskService.ovrtdueTaskFindAll();
+        model.addAttribute("overdueList", overdueList);
+        if(overdueList.isEmpty()){
+            model.addAttribute("overdue","期限切れタスクはありません");
+        }else{
+            model.addAttribute("overdue","期限切れタスクがあります");
+        }
+        //何順？
+        if(order == 0){
+            model.addAttribute("complete", "登録順で並んでいます");
+        }else if(order == 1){
+            model.addAttribute("complete", "優先度順で並んでいます");
+        }else{
+            model.addAttribute("complete", "期限順で並んでいます");
+        }
         model.addAttribute("title","タスク一覧");
         //紐付け用
         model.addAttribute("taskId",id);
@@ -184,7 +237,7 @@ public class TaskController {
             List<Task> overdueList = taskService.ovrtdueTaskFindAll();
             model.addAttribute("overdueList", overdueList);
             if(overdueList.isEmpty()){
-                model.addAttribute("overdue","期限切れタスクがはありません");
+                model.addAttribute("overdue","期限切れタスクはありません");
             }else{
                 model.addAttribute("overdue","期限切れタスクがあります");
             }
@@ -218,6 +271,7 @@ public class TaskController {
         return "task/index";
     }
 
+    //優先度順
     @GetMapping("/priority")
     public String priorityOrder(TaskForm taskForm, Model model){
         //順番更新
@@ -298,9 +352,11 @@ public class TaskController {
             model.addAttribute("title","タスク一覧");
             return "task/index";
         }
-
     }
 
+
+
+    //期限前タスクの削除
     @PostMapping("/delete")
     public String delete(@RequestParam("taskId") int id, Model model){
         //タスク削除
@@ -309,6 +365,14 @@ public class TaskController {
         return "redirect:/index";
     }
 
+    //期限切れタスクの削除
+    @PostMapping("/overduedelete")
+    public String overdueDelete(@RequestParam("taskId") int id, Model model){
+        //タスク削除
+        taskService.overdueDeleteById(id);;
+        //削除に失敗したら例外画面がでる
+        return "redirect:/index";
+    }
 
     private Task importTask(TaskForm taskForm, int taskId){
         Task task = new Task();
@@ -331,6 +395,7 @@ public class TaskController {
         taskForm.setTypeId(task.getTypeId());
         taskForm.setTitle(task.getTitle());
         taskForm.setDetail(task.getDetail());
+        taskForm.setDeadline(task.getDeadline());
         taskForm.getDetail();
         //新規登録画面に遷移はしないので
         taskForm.setIsNewTask(false);

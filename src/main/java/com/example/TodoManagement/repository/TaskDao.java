@@ -18,7 +18,9 @@ public interface TaskDao {
 
     //期限切れタスクの検索
     List<Task> overdueTaskFind(LocalDateTime localDateTime);
+    Optional<Task> overdueFindById(int id);
     List<Task> overdueTaskFindAll();
+    int overdueDeleteById(int id);
     void overdueTaskInsert(Task task);
 
 

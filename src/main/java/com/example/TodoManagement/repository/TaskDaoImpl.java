@@ -70,6 +70,38 @@ public class TaskDaoImpl implements TaskDao{
         task.setDetail((String)r.get("detail"));
         //クエリ結果はTimestamp型
         task.setDeadline(((Timestamp)r.get("deadline")).toLocalDateTime());
+        //System.out.println(((Timestamp)r.get("deadline")).toLocalDateTime());
+
+        TaskType taskType = new TaskType();
+        taskType.setId((int)r.get("type_id"));
+        taskType.setType((String)r.get("type"));
+        taskType.setComment((String)r.get("comment"));
+        //Task<-TaskType
+        task.setTaskType(taskType);
+
+        //Nullチェック
+        Optional<Task> oTask = Optional.ofNullable(task);
+
+        return oTask;
+    }
+
+    //期限切れタスクを1件
+    @Override
+    public Optional<Task> overdueFindById(int id) {
+        String s = "SELECT overdueTask.id, user_id, type_id, title, detail, deadline, " +
+                "type, comment FROM overdueTask INNER JOIN task_type ON overdueTask.type_id = task_type.id WHERE overdueTask.id = ?";
+        Map<String, Object> r = jdbcTemplate.queryForMap(s, id);
+
+        //ここむだ
+        Task task = new Task();
+        task.setId((int)r.get("id"));
+        task.setUserId((int)r.get("user_id"));
+        task.setTypeId((int)r.get("type_id"));
+        task.setTitle((String)r.get("title"));
+        task.setDetail((String)r.get("detail"));
+        //クエリ結果はTimestamp型
+        task.setDeadline(((Timestamp)r.get("deadline")).toLocalDateTime());
+        //System.out.println(((Timestamp)r.get("deadline")).toLocalDateTime());
 
         TaskType taskType = new TaskType();
         taskType.setId((int)r.get("type_id"));
@@ -106,6 +138,11 @@ public class TaskDaoImpl implements TaskDao{
         return importTask(rlist);
     }
 
+    @Override
+    public int overdueDeleteById(int id) {
+        String s = "DELETE FROM overdueTask WHERE id = ?";
+        return jdbcTemplate.update(s, id);
+    }
 
 
     //期限切れタスクを期限切れタスク一覧に登録

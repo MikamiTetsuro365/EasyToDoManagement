@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.6">
-    <title>Starter Template · Bootstrap</title>
+    <title>EasyToDoManagement</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/starter-template/">
 
@@ -22,8 +22,6 @@
     <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon.ico">
     <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#563d7c">
-
-
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -50,7 +48,7 @@
 <div th:replace="~{block/header::headerA}"></div>
 
 <main role="main" class="container">
-
+    <object type="image/svg+xml" data="noise.svg" width="256" height="256"></object>
     <div class="starter-template">
         <h1 th:text="${title}">title</h1>
     </div>
@@ -60,7 +58,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="registerModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="registerModalLabel" th:text="${taskForm.isNewTask} ? '新規登録' : 'タスク番号:'+${taskId}+'を編集' ">idを編集</h5>
                     <button type="button" class="close closeModal" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -111,60 +109,16 @@
         </div>
     </div>
 
-    <!--ここはダメ-->
-    <!--isNewTaskがtrueの時はinsertへ，falseのときはupdate機能へリダイレクト-->
-    <!--よく忘れるあれ　? 真 : 偽-->
-    <!--${taskForm.isNewTask} ? @{/index/insert} : @{/index/update}-->
-<!--    <div th:unless="${taskForm.isNewTask}">-->
-<!--        <form method="post" action="#" th:action="@{/index/update}" th:object="${taskForm}">-->
-<!--            <div class="form-group">-->
-<!--                <label for="typeId">タスク種別</label>-->
-<!--                <select class="custom-select" id="typeId" name="typeId" required>-->
-<!--                    <option selected disabled value="">選べよ...</option>-->
-<!--                    <option value="1" th:selected="*{typeId == 1}">緊急</option>-->
-<!--                    <option value="2" th:selected="*{typeId == 2}">重要</option>-->
-<!--                    <option value="3" th:selected="*{typeId == 3}">どうでもいい</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;タスク名&ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--                <label for="title">タスク名</label>-->
-<!--                <textarea id="title" class="form-control" name="title" cols="30" th:field="*{title}" rows="1"></textarea>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;エラー表示&ndash;&gt;-->
-<!--            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>-->
-<!--            &lt;!&ndash;タスク内容&ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--                <label for="detail">タスク内容</label>-->
-<!--                <textarea id="detail" class="form-control" name="detail" cols="40" th:field="*{detail}" rows="1"></textarea>-->
-<!--            </div>-->
-<!--            &lt;!&ndash;エラー表示&ndash;&gt;-->
-<!--            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>-->
-<!--            &lt;!&ndash;日付選択&ndash;&gt;-->
-<!--            <div class="form-group">-->
-<!--                <input type="datetime-local" name="deadline" th:value="*{deadline}">-->
-<!--            </div>-->
-<!--            &lt;!&ndash;エラー表示&ndash;&gt;-->
-<!--            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></div>-->
-<!--            &lt;!&ndash;更新と削除で使うID，InsertならIDは自動で付与されるので隠しておく, valueにはその時取得したtaskIdを，th:ifが0の時だけ下のフォームは有効&ndash;&gt;-->
-<!--            <div class="form-group" th:if="${taskId}" >-->
-<!--                <input type="hidden" name="taskId" th:value="${taskId}">-->
-<!--            </div>-->
-<!--            &lt;!&ndash;送信ボタン&ndash;&gt;-->
-<!--            <button type="submit" class="btn btn-primary">登録</button>-->
-<!--        </form>-->
-<!--    </div>-->
-    <!--一覧表示　isNewTaskがTrueの時だけ-->
-        <!--何順で並んでいるか表示するところ，completeが空だったら表示しない-->
-    <div th:unless="${#strings.isEmpty(complete)}">
-        <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${complete}"　role="alert"></div>
-    </div>
     <div class="float-right pb-1">
-        <button type="button" onclick="StopTimer();" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#registerModal">タスク新規登録</button>
+        <button type="button" onclick="StopTimer();"  class="btn btn-success btn-lg" data-toggle="modal" data-target="#registerModal">タスク新規登録</button>
         <a type="button" th:href="@{/index/register}" class="btn btn-primary btn-lg">登録順</a>
         <a type="button" th:href="@{/index/priority}" class="btn btn-primary btn-lg">優先度順</a>
         <a type="button" th:href="@{/index/deadline}" class="btn btn-primary btn-lg">期限順</a>
     </div>
+
+<!--    <div class="pb-1" th:unless="${#strings.isEmpty(complete)}">-->
+<!--        <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${complete}"　role="alert"></div>-->
+<!--    </div>-->
 
     <!--タスクリスト-->
     <div  th:replace="~{block/tasklist::tasklist}"></div>

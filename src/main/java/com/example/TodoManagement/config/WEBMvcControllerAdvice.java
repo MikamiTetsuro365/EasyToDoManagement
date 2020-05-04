@@ -34,6 +34,4 @@ public class WEBMvcControllerAdvice {
         model.addAttribute("message", e);
         return "error/errorPage";
     }
-
-
 }

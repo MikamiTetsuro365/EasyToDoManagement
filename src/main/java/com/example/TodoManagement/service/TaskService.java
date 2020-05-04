@@ -15,8 +15,11 @@ public interface TaskService {
     void update(Task task);
     void deleteById(int id);
 
+    //期限切れのタスクに対して
     List<Task> overdueTaskFind(LocalDateTime localDateTime);
     List<Task> ovrtdueTaskFindAll();
+    Optional<Task> getOverdueTask(int id);
+    void overdueDeleteById(int id);
     void overdueTaskInsert(Task task);
 
 

@@ -19,17 +19,14 @@ $(function(){
 //    $('.closeModal').on('click', function(){
 //        StartTimer();
 //    });
-
 //    $('#registerModal').on('show.bs.modal', function () {
 //        StopTimer();
 //    });
 
-//    $('#registerModal').on('hidden.bs.modal', function () {
-//        //StartTimer();
-//        //ここらAjaxでどうにかして方がええんやろうなぁ
-//        //window.location.href = '/index';
-//        updateTaskList();
-//    })
+    //閉じたときの挙動
+    $('#registerModal').on('hidden.bs.modal', function () {
+        window.location.href = '/index';
+    })
 
     //Ajax
     function checkTaskList(){
@@ -41,7 +38,7 @@ $(function(){
                 // Ajaxリクエストが成功した時発動
                 .done( (data) => {
                     console.log(data);
-                    $('#tasklist').html(data);
+                    $('#TASKLIST').html(data);
                 })
                 // Ajaxリクエストが失敗した時発動
                 .fail( (data) => {

@@ -23,7 +23,7 @@ public class SheduledTasks {
     }
 
     //期限切れタスクの検索
-    @Scheduled(fixedRate = 15000)
+    @Scheduled(fixedRate = 5000)
     public void checkDeadline(){
         //System.out.println("test");
         //期限切れのタスクを探す

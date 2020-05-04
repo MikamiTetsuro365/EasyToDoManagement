@@ -1,15 +1,15 @@
 <!-- タスクリスト-->
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymleaf.org">
-<div id="tasklist" th:fragment="tasklist">
+<div id="TASKLIST" th:fragment="tasklist">
     <table class="table">
         <thead class="thead-dark">
-        <tr>
-        <tr>
-            <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
-
-        </tr>
-        </tr>
+            <tr>
+                <th colspan="7"><div class="text-center" th:text="${complete}">何順で並んでいるか</div></th>
+            </tr>
+            <tr>
+                <th style="width:10%">タスク番号</th> <th style="width:15%">タスク種別</th>　<th style="width:15%"> タスク名</th> <th style="width:20%">タスク内容</th> <th style="width:20%">期限まで</th> <th style="width:10%">&nbsp;</th> <th style="width:10%">&nbsp;</th>
+            </tr>
         </thead>
         <tbody>
         <tr th:each="t: ${list}">
@@ -17,48 +17,76 @@
             <td th:text="${t.taskType.type}">typeId</td>
             <td th:text="${t.title}">title</td>
             <td th:text="${t.detail}">detail</td>
-            <td th:text="${t.deadline}">deadline</td>
+            <td ><div th:id="${t.id}"></div></td>
+            <div >
+                <script th:inline="javascript">
+                    function countDown(){
+                        setInterval(counter,1000);
+                    };
+                    function counter(){
+                            var now = new Date();
+                            var overdue = new Date([[${t.deadline}]]);
+                            var ms  = overdue.getTime() - now.getTime();
+                            if(ms >= 0){
+                                var d = 24 * 60 * 60 * 1000;
+                                var day  = Math.floor(ms / d);
+                                var h = 60 * 60 * 1000;
+                                var hour = Math.floor((ms - day * d ) / h)
+                                hour = hour % 24;
+                                var m = 60 * 1000;
+                                var minute = Math.floor((ms - day * d - hour * h) / m);
+                                var sec = Math.floor((ms - (day * d) - (hour * h) - (minute * m)) / 1000);
+                                document.getElementById("[[${t.id}]]").textContent = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
+                            }else{
+                                document.getElementById("[[${t.id}]]").textContent = "期限を過ぎています";
+                            }
+
+                            console.log(sec);
+                    };
+                    countDown();
+                </script>
+            </div>
             <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
             <td>
-                <a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a>
+                <a type="button" th:id="'b'+${t.id}" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">編集</a>
             </td>
             <!--削除ではコントローラにある機能にpostを飛ばす-->
             <td>
                 <!--th:action="@{/index/delete}コントローラ呼び出し-->
                 <form method="post" th:action="@{/index/delete}">
                     <input type="hidden" name="taskId" th:value="${t.id}">
-                    <button type="submit" class="btn btn btn-danger">削除</button>
+                    <button type="submit" class="btn btn btn-danger">完了</button>
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
     <!--期限ぎれタスクの表示-->
-    <div th:unless="${#strings.isEmpty(overdue)}">
-        <div class="alert alert-success mx-auto text-center" style="width: 400px;" th:text="${overdue}"　role="alert"></div>
-    </div>
+<!--    <div th:unless="${#strings.isEmpty(overdue)}">-->
+<!--        <div class="alert alert-danger mx-auto text-center" style="width: 400px;" th:text="${overdue}"　role="alert"></div>-->
+<!--    </div>-->
     <table class="table">
         <thead class="thead-dark">
-        <tr>
-        <tr>
-            <th>タスク番号</th> <th>タスク種別</th>　<th>タスク名</th> <th>タスク内容</th> <th>期限</th> <th> </th> <th> </th>
-
-        </tr>
-        </tr>
+            <tr>
+                <th colspan="7"><div class="text-center" th:text="${overdue}">何順で並んでいるか</div></th>
+            </tr>
+            <tr>
+                <th style="width:10%">タスク番号</th> <th style="width:15%">タスク種別</th>　<th style="width:15%"> タスク名</th> <th style="width:20%">タスク内容</th> <th style="width:20%">期限まで</th> <th style="width:10%">&nbsp;</th> <th style="width:10%">&nbsp;</th>
+            </tr>
         </thead>
         <tbody>
-        <tr th:each="t: ${overdueList}">
+        <tr th:each="t: ${overdueList}" th:with="date=${#dates.createNow()}">
             <td th:text="${t.id}">id</td>
             <td th:text="${t.taskType.type}">typeId</td>
             <td th:text="${t.title}">title</td>
             <td th:text="${t.detail}">detail</td>
-            <td th:text="${t.deadline}">deadline</td>
+            <td ><img th:src="@{/img/noise{id}.svg(id=(${#calendars.millisecond(date)} % 3 + 1))}" ></td>
             <!--th:href="@{/index/{id}(id=${t.id})}"でURLを動的に発行-->
-            <td><a type="button" th:href="@{/index/{id}(id=${t.id})}" class="btn btn-primary">延長</a></td>
+            <td><a type="button" th:href="@{/index/overdue{id}(id=${t.id})}" class="btn btn-warning">延長</a></td>
             <!--削除ではコントローラにある機能にpostを飛ばす-->
             <td>
                 <!--th:action="@{/index/delete}コントローラ呼び出し-->
-                <form method="post" th:action="@{/index/delete}">
+                <form method="post" th:action="@{/index/overduedelete}">
                     <input type="hidden" name="taskId" th:value="${t.id}">
                     <button type="submit" class="btn btn btn-danger">削除</button>
                 </form>
