@@ -25,7 +25,7 @@ $(function(){
 
     //閉じたときの挙動
     $('#registerModal').on('hidden.bs.modal', function () {
-        window.location.href = '/index';
+        checkTaskList()
     })
 
     //Ajax

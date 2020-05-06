@@ -110,10 +110,10 @@
     </div>
 
     <div class="float-right pb-1">
-        <button type="button" onclick="StopTimer();"  class="btn btn-success btn-lg" data-toggle="modal" data-target="#registerModal">タスク新規登録</button>
-        <a type="button" th:href="@{/index/register}" class="btn btn-primary btn-lg">登録順</a>
-        <a type="button" th:href="@{/index/priority}" class="btn btn-primary btn-lg">優先度順</a>
-        <a type="button" th:href="@{/index/deadline}" class="btn btn-primary btn-lg">期限順</a>
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#registerModal">タスク新規登録</button>
+        <a type="button" th:href="@{/index/register}" class="btn btn-info btn-lg">登録順</a>
+        <a type="button" th:href="@{/index/priority}" class="btn btn-info btn-lg">優先度順</a>
+        <a type="button" th:href="@{/index/deadline}" class="btn btn-info btn-lg">期限順</a>
     </div>
 
 <!--    <div class="pb-1" th:unless="${#strings.isEmpty(complete)}">-->
