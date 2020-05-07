@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -437,7 +438,9 @@ public class TaskController {
         long hour = max(0, ChronoUnit.HOURS.between(now, deadline) - day * 24);
         long minute = max(0, ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60);
         long sec = max(0, ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
-
+        System.out.println("LocalDateTime.now() " + LocalDateTime.now().toString());
+        System.out.println("LocalDateTime.now(ZoneId.of(\"Asia/Tokyo\") " + LocalDateTime.now(ZoneId.of("Asia/Tokyo")).toString());
+        System.out.println("LocalDateTime.now(ZoneId.of(\"GMT\") " + LocalDateTime.now(ZoneId.of("GMT")).toString());
         time = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
         System.out.println(time);
 
