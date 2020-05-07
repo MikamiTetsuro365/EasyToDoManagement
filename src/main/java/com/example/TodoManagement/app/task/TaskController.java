@@ -22,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static java.lang.Long.max;
+
 @Controller
 @RequestMapping("/index")
 public class TaskController {
@@ -432,9 +434,9 @@ public class TaskController {
         String time;
         LocalDateTime now = LocalDateTime.now();
         long day = ChronoUnit.DAYS.between(now, deadline);
-        long hour = ChronoUnit.HOURS.between(now, deadline) - day * 24;
-        long minute = ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60;
-        long sec = ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60;
+        long hour = max(0, ChronoUnit.HOURS.between(now, deadline) - day * 24);
+        long minute = max(0, ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60);
+        long sec = max(0, ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
 
         time = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
         System.out.println(time);
@@ -442,3 +444,18 @@ public class TaskController {
         return time;
     }
 }
+//    var overdue = new Date([[${t.deadline}]]);
+//        var ms  = overdue.getTime() - now.getTime();
+//        if(ms >= 0){
+//        var d = 24 * 60 * 60 * 1000;
+//        var day  = Math.floor(ms / d);
+//        var h = 60 * 60 * 1000;
+//        var hour = Math.floor((ms - day * d ) / h)
+//        hour = hour % 24;
+//        var m = 60 * 1000;
+//        var minute = Math.floor((ms - day * d - hour * h) / m);
+//        var sec = Math.floor((ms - (day * d) - (hour * h) - (minute * m)) / 1000);
+//        document.getElementById("[[${t.id}]]").textContent = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
+//        }else{
+//        document.getElementById("[[${t.id}]]").textContent = "期限を過ぎています";
+//        }                            var overdue = new Date([[${t.deadline}]]);
