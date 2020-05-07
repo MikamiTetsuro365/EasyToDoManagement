@@ -57,7 +57,8 @@ public class TaskController {
         //時間(ミリビョウは切り捨て)
         LocalDateTime localDateTime = LocalDateTime.now();
         localDateTime = localDateTime.plusMinutes(1);
-        task.setDeadline(localDateTime.truncatedTo(ChronoUnit.MINUTES));
+        task.setDeadline(localDateTime);
+        System.out.println("aaa:" + localDateTime);
         //適当なの登録
         taskService.insert(task);
         return "redirect:/index";
@@ -438,9 +439,6 @@ public class TaskController {
         long hour = max(0, ChronoUnit.HOURS.between(now, deadline) - day * 24);
         long minute = max(0, ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60);
         long sec = max(0, ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
-        System.out.println("LocalDateTime.now() " + LocalDateTime.now().toString());
-        System.out.println("LocalDateTime.now(ZoneId.of(\"Asia/Tokyo\") " + LocalDateTime.now(ZoneId.of("Asia/Tokyo")).toString());
-        System.out.println("LocalDateTime.now(ZoneId.of(\"GMT\") " + LocalDateTime.now(ZoneId.of("GMT")).toString());
         time = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
         System.out.println(time);
 
