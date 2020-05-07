@@ -31,12 +31,12 @@
                                 var d = 24 * 60 * 60 * 1000;
                                 var day  = Math.floor(ms / d);
                                 var h = 60 * 60 * 1000;
-                                var hour = Math.floor((ms - day * d ) / h)
-                                hour = hour % 24;
+                                var hour = Math.floor(ms / h);
+                                t_hour = hour % 24;
                                 var m = 60 * 1000;
-                                var minute = Math.floor((ms - day * d - hour * h) / m);
-                                var sec = Math.floor((ms - (day * d) - (hour * h) - (minute * m)) / 1000);
-                                document.getElementById("[[${t.id}]]").textContent = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
+                                var minute = Math.floor((ms - hour * h) / m);
+                                var sec = Math.floor((ms - (hour * h) - (minute * m)) / 1000);
+                                document.getElementById("[[${t.id}]]").textContent = day + "日" + t_hour + "時間" + minute + "分" + sec + "秒";
                             }else{
                                 document.getElementById("[[${t.id}]]").textContent = "期限を過ぎています";
                             }
