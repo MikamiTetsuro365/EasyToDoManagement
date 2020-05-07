@@ -435,11 +435,23 @@ public class TaskController {
     private String remainTime(LocalDateTime deadline){
         String time;
         LocalDateTime now = LocalDateTime.now();
-        long day = ChronoUnit.DAYS.between(now, deadline);
-        long hour = max(0, ChronoUnit.HOURS.between(now, deadline) - day * 24);
-        long minute = max(0, ChronoUnit.MINUTES.between(now, deadline) - day * 24 * 60 - hour * 60);
-        long sec = max(0, ChronoUnit.SECONDS.between(now, deadline) - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
-        time = day + "日" + hour + "時間" + minute + "分" + sec + "秒";
+
+        long ms = ChronoUnit.MILLIS.between(now, deadline);
+
+        if(ms >= 0){
+            long d = 24 * 60 * 60 * 1000;
+            long day  = (long) Math.floor(ms / d);
+            long h = 60 * 60 * 1000;
+            long hour = (long) Math.floor(ms / h);
+            long hour1 = hour % 24;
+            long m = 60 * 1000;
+            long minute = (long) Math.floor((ms - hour * h) / m);
+            long sec = (long) Math.floor((ms - (hour * h) - (minute * m)) / 1000);
+
+            time = day + "日" + hour1 + "時間" + minute + "分" + sec + "秒";
+        }else{
+            time = 0 + "日" + 0 + "時間" + 0 + "分" + 0 + "秒";
+        }
         System.out.println(time);
 
         return time;

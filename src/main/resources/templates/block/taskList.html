@@ -24,7 +24,8 @@
                         setInterval(counter,1000);
                     };
                     function counter(){
-                            var now = new Date();
+                            var jtime = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' });
+                            var now = new Date(jtime);
                             var overdue = new Date([[${t.deadline}]]);
                             var ms  = overdue.getTime() - now.getTime();
                             if(ms >= 0){
